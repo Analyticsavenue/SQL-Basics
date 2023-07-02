@@ -54,3 +54,45 @@ VALUES (15, 70000, 35, '111-222-3333', 'matthew@example.com', 'London');
 
 INSERT INTO Employee (id, salary, age, phone_number, email_id, location)
 VALUES (12, 53000, 31, '888-999-0000', 'natalie@example.com', 'Paris');
+
+
+----To know how partition works
+with cte_phonedup AS
+(
+select
+id,
+phone_number,
+location,
+ROW_NUMBER()
+over (partition by phone_number,location) as ph_lc
+from employee
+)
+select * from cte_phonedup
+
+---duplicates for 2 columns
+with cte_phonedup AS
+(
+select
+id,
+phone_number,
+location,
+ROW_NUMBER()
+over (partition by phone_number,location) as ph_lc
+from employee
+)
+select * from cte_phonedup where ph=1 ---to remove the duplicates
+
+-----to get the duplicates
+with cte_phonedup AS
+(
+select
+id,
+phone_number,
+location,
+ROW_NUMBER()
+over (partition by phone_number,location) as ph_lc
+from employee
+)
+select * from cte_phonedup where ph=2
+
+'''Explore about Row_id and how you implement the same using Row_id'''
