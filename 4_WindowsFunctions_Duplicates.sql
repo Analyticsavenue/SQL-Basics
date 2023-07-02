@@ -1,5 +1,5 @@
 CREATE TABLE Employee (
-    id INT PRIMARY KEY,
+    id INT,
     salary DECIMAL(10, 2),
     age INT,
     phone_number VARCHAR(15),
