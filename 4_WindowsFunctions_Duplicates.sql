@@ -55,12 +55,6 @@ VALUES (15, 70000, 35, '111-222-3333', 'matthew@example.com', 'London');
 INSERT INTO Employee (id, salary, age, phone_number, email_id, location)
 VALUES (12, 53000, 31, '888-999-0000', 'natalie@example.com', 'Paris');
 
---Recent changes
-INSERT INTO Employee (id, salary, age, phone_number, email_id, location)
-VALUES (17, 70000, 31, '888-999-0000', 'natalie@example.com', 'London');
-
-update employee set salary = 60000 where id = 15
-
 
 ----To know how partition works
 with cte_phonedup AS
@@ -102,3 +96,23 @@ from employee
 select * from cte_phonedup where ph=2
 
 '''Explore about Row_id and how you implement the same using Row_id'''
+
+--Recent changes
+INSERT INTO Employee (id, salary, age, phone_number, email_id, location)
+VALUES (17, 70000, 31, '888-999-0000', 'natalie@example.com', 'London');
+
+update employee set salary = 60000 where id = 15
+----Pick the employee with nth highest salary in each location
+with location_salary_order_desc as
+(
+select id,
+salary,
+location,
+dense_rank()
+over
+(partition by location order by salary desc) as increasing_order
+from
+employee
+)
+
+select * from location_salary_order_desc where increasing_order=4
